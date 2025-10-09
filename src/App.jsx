@@ -5,14 +5,12 @@ export default function App() {
   const googleDriveLink =
     "https://drive.google.com/file/d/1B3H86h8QSLWT4pKs5gI_LgHAh5Fqc-Tz/view?usp=drivesdk";
 
-  const whatsappNumber = "923133134555"; // your WhatsApp number
+  const whatsappNumber = "923133134555";
   const message =
     "👋 Hello! I saw your clothing catalog and would like to place an order or ask for details.";
   const embedLink = googleDriveLink.replace("/view", "/preview");
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
     <div
@@ -24,7 +22,7 @@ export default function App() {
         backgroundColor: "#f8f9fa",
       }}
     >
-      {/* ✅ Full-screen PDF viewer */}
+      {/* ✅ Full-screen responsive PDF viewer */}
       <iframe
         src={embedLink}
         title="PDF Viewer"
@@ -39,12 +37,12 @@ export default function App() {
         allowFullScreen
       ></iframe>
 
-      {/* ✅ Floating WhatsApp button + message */}
+      {/* ✅ Floating WhatsApp Button + message */}
       <div
         style={{
           position: "fixed",
-          bottom: "60px", // 👈 moved up from 20px
-          right: "20px",
+          bottom: "70px",
+          right: "18px",
           display: "flex",
           alignItems: "center",
           gap: "8px",
@@ -52,22 +50,10 @@ export default function App() {
         }}
       >
         {/* Message bubble */}
-        <div
-          className="whatsapp-message"
-          style={{
-            backgroundColor: "#25D366",
-            color: "white",
-            padding: "7px 12px",
-            borderRadius: "20px",
-            fontSize: "14px",
-            fontWeight: "500",
-            boxShadow: "0 3px 6px rgba(0,0,0,0.2)",
-            animation: "fadeIn 1.5s ease-in-out",
-            whiteSpace: "nowrap",
-          }}
-        >
-          💬 for Order Please Click
-        </div>
+       <div className="whatsapp-message">
+  <span>💬 For Order — Tap WhatsApp</span>
+</div>
+
 
         {/* WhatsApp Button */}
         <a
@@ -76,59 +62,23 @@ export default function App() {
           )}`}
           target="_blank"
           rel="noopener noreferrer"
-          style={{
-            backgroundColor: "#25D366",
-            color: "white",
-            borderRadius: "50%",
-            width: "48px",
-            height: "48px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: "22px",
-            boxShadow: "0 3px 8px rgba(0,0,0,0.3)",
-            textDecoration: "none",
-            animation: "pulse 2s infinite",
-          }}
+          className="whatsapp-btn"
         >
           <FaWhatsapp />
         </a>
       </div>
 
       {/* ✅ Back to Top button */}
-      {/* <button
-        onClick={scrollToTop}
-        style={{
-          position: "fixed",
-          bottom: "120px", // 👈 also moved up a bit
-          right: "22px",
-          backgroundColor: "#007bff",
-          color: "white",
-          borderRadius: "50%",
-          width: "44px",
-          height: "44px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: "20px",
-          border: "none",
-          cursor: "pointer",
-          boxShadow: "0 4px 6px rgba(0,0,0,0.3)",
-          zIndex: 999,
-          transition: "transform 0.2s ease-in-out",
-        }}
-        onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
-        onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-      >
+      {/* <button onClick={scrollToTop} className="top-button">
         <FaArrowUp />
       </button> */}
 
-      {/* ✅ Animations + responsive design */}
+      {/* ✅ Animations + responsiveness */}
       <style>
         {`
           @keyframes pulse {
             0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6); }
-            70% { transform: scale(1.1); box-shadow: 0 0 0 12px rgba(37, 211, 102, 0); }
+            70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(37, 211, 102, 0); }
             100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
           }
 
@@ -137,27 +87,102 @@ export default function App() {
             100% { opacity: 1; transform: translateX(0); }
           }
 
-          /* ✅ Make everything smaller on mobile */
-          @media (max-width: 600px) {
-            .whatsapp-message {
-              font-size: 11px !important;
-              padding: 4px 7px !important;
-              max-width: 130px;
-              overflow: hidden;
-              text-overflow: ellipsis;
-            }
-            a, button {
-              width: 38px !important;
-              height: 38px !important;
-              font-size: 18px !important;
-            }
+          .whatsapp-message {
+            background-color: #25D366;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+            animation: fadeIn 1.5s ease-in-out;
+            white-space: nowrap;
           }
 
-          @media (max-width: 400px) {
-            .whatsapp-message {
-              display: none; /* 👈 hide message on very small screens for cleanliness */
-            }
+          .whatsapp-btn {
+            background-color: #25D366;
+            color: white;
+            border-radius: 50%;
+            width: 46px;
+            height: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+            text-decoration: none;
+            animation: pulse 2s infinite;
           }
+
+          .top-button {
+            position: fixed;
+            bottom: 130px;
+            right: 22px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 50%;
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            z-index: 999;
+            transition: transform 0.2s ease-in-out;
+          }
+
+          .top-button:hover {
+            transform: scale(1.1);
+          }
+
+          /* ✅ Responsive Tweaks */
+         /* ✅ Responsive Tweaks */
+@media (max-width: 700px) {
+  .whatsapp-message {
+    font-size: 12px;
+    padding: 5px 8px;
+    max-width: 150px;
+  }
+  .whatsapp-btn, .top-button {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 500px) {
+  .whatsapp-message {
+    font-size: 10px;
+    padding: 4px 6px;
+    max-width: 120px;
+  }
+  .whatsapp-btn, .top-button {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+}
+
+/* ✅ Tiny screens — show shorter text instead of hiding */
+@media (max-width: 350px) {
+  .whatsapp-message {
+    font-size: 9px;
+    padding: 3px 5px;
+    max-width: 90px;
+    white-space: normal;
+    line-height: 1.2;
+  }
+  .whatsapp-message::before {
+    content: "Order → WhatsApp";
+  }
+  .whatsapp-message span {
+    display: none;
+  }
+}
+
         `}
       </style>
     </div>
