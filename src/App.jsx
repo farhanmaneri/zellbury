@@ -5,8 +5,10 @@ export default function App() {
   const [images, setImages] = useState([]);
   const whatsappNumber = "923133134555";
 
+  
+  const baseURL = import.meta.env.DEV ? "http://localhost:5000" : "";
   useEffect(() => {
-fetch(`${import.meta.env.VITE_API_URL}/api/images`)
+fetch(`${baseURL}/api/images`)
       .then((res) => res.json())
       .then((data) => setImages(data))
       .catch((err) => console.error("Error fetching images:", err));

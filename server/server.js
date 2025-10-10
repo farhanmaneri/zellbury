@@ -1,3 +1,4 @@
+// server.js
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -19,7 +20,7 @@ cloudinary.config({
 app.get("/api/images", async (req, res) => {
   try {
     const { resources } = await cloudinary.search
-      .expression("folder:zellbury") // your folder name
+      .expression("folder:zellbury")
       .sort_by("public_id", "asc")
       .max_results(100)
       .execute();
@@ -27,10 +28,17 @@ app.get("/api/images", async (req, res) => {
     const imageUrls = resources.map((file) => file.secure_url);
     res.json(imageUrls);
   } catch (error) {
-    console.error("Cloudinary Error:", error);
+    console.error("❌ Cloudinary Error:", error);
     res.status(500).json({ message: "Failed to fetch images" });
   }
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+// ✅ Dual-mode: local & Vercel compatible
+if (process.env.VERCEL) {
+  // Running on Vercel
+  module.exports = app;
+} else {
+  // Running locally
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => console.log(`✅ Local server running on port ${PORT}`));
+}
