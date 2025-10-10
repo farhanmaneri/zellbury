@@ -1,188 +1,120 @@
-import React from "react";
-import { FaWhatsapp, FaArrowUp } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
+import { FaWhatsapp } from "react-icons/fa";
 
 export default function App() {
-  const googleDriveLink =
-    "https://drive.google.com/file/d/1B3H86h8QSLWT4pKs5gI_LgHAh5Fqc-Tz/view?usp=drivesdk";
-
+  const [images, setImages] = useState([]);
   const whatsappNumber = "923133134555";
-  const message =
-    "👋 Hello! I saw your clothing catalog and would like to place an order or ask for details.";
-  const embedLink = googleDriveLink.replace("/view", "/preview");
 
-  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+  useEffect(() => {
+fetch(`${import.meta.env.VITE_API_URL}/api/images`)
+      .then((res) => res.json())
+      .then((data) => setImages(data))
+      .catch((err) => console.error("Error fetching images:", err));
+  }, []);
 
   return (
     <div
       style={{
-        position: "relative",
-        width: "100vw",
-        height: "100vh",
-        overflow: "hidden",
         backgroundColor: "#f8f9fa",
+        minHeight: "100vh",
+        padding: "20px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
       }}
     >
-      {/* ✅ Full-screen responsive PDF viewer */}
-      <iframe
-        src={embedLink}
-        title="PDF Viewer"
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          border: "none",
-        }}
-        allowFullScreen
-      ></iframe>
+      <h2 style={{ marginBottom: "20px", color: "#333" }}>
+        👗 ZELLBURY Clothing Catalog
+      </h2>
 
-      {/* ✅ Floating WhatsApp Button + message */}
-      <div
-        style={{
-          position: "fixed",
-          bottom: "70px",
-          right: "18px",
-          display: "flex",
-          alignItems: "center",
-          gap: "8px",
-          zIndex: 1000,
-        }}
-      >
-        {/* Message bubble */}
-       <div className="whatsapp-message">
-  <span>💬 For Order — Tap WhatsApp</span>
-</div>
+      {/* ✅ Image Grid */}
+      <div className="image-grid">
+        {images.map((img, index) => (
+          <div
+            key={index}
+            style={{
+              backgroundColor: "white",
+              borderRadius: "12px",
+              boxShadow: "0 3px 8px rgba(0,0,0,0.1)",
+              overflow: "hidden",
+              position: "relative",
+            }}
+          >
+            <img
+              src={img}
+              alt={`Cloth ${index + 1}`}
+              style={{
+                width: "100%",
+                height: "auto",
+                display: "block",
+                objectFit: "cover",
+              }}
+            />
+            <div
+              style={{
+                padding: "10px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span style={{ fontWeight: "600", color: "#333" }}>
+                Image #{index + 1}
+              </span>
 
-
-        {/* WhatsApp Button */}
-        <a
-          href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-            message
-          )}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="whatsapp-btn"
-        >
-          <FaWhatsapp />
-        </a>
+              {/* ✅ WhatsApp button with image number + URL */}
+              <a
+                href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+                  `👋 Hi! I'm interested in image #${index + 1} from your Zellbury catalog.\n\n📸 Image link:\n${img}`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  backgroundColor: "#25D366",
+                  color: "white",
+                  borderRadius: "50%",
+                  width: "42px",
+                  height: "42px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "20px",
+                  boxShadow: "0 3px 8px rgba(0,0,0,0.3)",
+                  textDecoration: "none",
+                  transition: "transform 0.2s",
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
+                onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+              >
+                <FaWhatsapp />
+              </a>
+            </div>
+          </div>
+        ))}
       </div>
 
-      {/* ✅ Back to Top button */}
-      {/* <button onClick={scrollToTop} className="top-button">
-        <FaArrowUp />
-      </button> */}
-
-      {/* ✅ Animations + responsiveness */}
+      {/* ✅ CSS for responsive grid */}
       <style>
         {`
-          @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6); }
-            70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(37, 211, 102, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+          .image-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
           }
 
-          @keyframes fadeIn {
-            0% { opacity: 0; transform: translateX(20px); }
-            100% { opacity: 1; transform: translateX(0); }
+          @media (max-width: 900px) {
+            .image-grid {
+              grid-template-columns: repeat(2, 1fr);
+            }
           }
 
-          .whatsapp-message {
-            background-color: #25D366;
-            color: white;
-            padding: 6px 10px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 500;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
-            animation: fadeIn 1.5s ease-in-out;
-            white-space: nowrap;
+          @media (max-width: 500px) {
+            .image-grid {
+              grid-template-columns: repeat(1, 1fr);
+            }
           }
-
-          .whatsapp-btn {
-            background-color: #25D366;
-            color: white;
-            border-radius: 50%;
-            width: 46px;
-            height: 46px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
-            text-decoration: none;
-            animation: pulse 2s infinite;
-          }
-
-          .top-button {
-            position: fixed;
-            bottom: 130px;
-            right: 22px;
-            background-color: #007bff;
-            color: white;
-            border-radius: 50%;
-            width: 42px;
-            height: 42px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            z-index: 999;
-            transition: transform 0.2s ease-in-out;
-          }
-
-          .top-button:hover {
-            transform: scale(1.1);
-          }
-
-          /* ✅ Responsive Tweaks */
-         /* ✅ Responsive Tweaks */
-@media (max-width: 700px) {
-  .whatsapp-message {
-    font-size: 12px;
-    padding: 5px 8px;
-    max-width: 150px;
-  }
-  .whatsapp-btn, .top-button {
-    width: 40px;
-    height: 40px;
-    font-size: 18px;
-  }
-}
-
-@media (max-width: 500px) {
-  .whatsapp-message {
-    font-size: 10px;
-    padding: 4px 6px;
-    max-width: 120px;
-  }
-  .whatsapp-btn, .top-button {
-    width: 36px;
-    height: 36px;
-    font-size: 16px;
-  }
-}
-
-/* ✅ Tiny screens — show shorter text instead of hiding */
-@media (max-width: 350px) {
-  .whatsapp-message {
-    font-size: 9px;
-    padding: 3px 5px;
-    max-width: 90px;
-    white-space: normal;
-    line-height: 1.2;
-  }
-  .whatsapp-message::before {
-    content: "Order → WhatsApp";
-  }
-  .whatsapp-message span {
-    display: none;
-  }
-}
-
         `}
       </style>
     </div>
