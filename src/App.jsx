@@ -1,35 +1,42 @@
 import React, { useEffect, useState } from "react";
 import { FaWhatsapp } from "react-icons/fa";
+import Footer from "./Footer";
+
+// ✅ Secure agent mapping
+const AGENT_CODES = {
+  SD2024: { name: "saeed", number: "923069632423" },
+  AD2024: { name: "arshid", number: "923319382831" },
+  KD2024: { name: "khadija", number: "923320926641" },
+  SH2024: { name: "shaheen", number: "923168802164" },
+  DEFAULT: { name: "Sales Team", number: "923133134555" },
+};
 
 export default function App() {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const whatsappNumber = "923133134555";
+  const [agent, setAgent] = useState(AGENT_CODES.DEFAULT);
 
   const baseURL = import.meta.env.VITE_API_DEV;
 
   useEffect(() => {
+    // ✅ Get agent code from URL
+    const params = new URLSearchParams(window.location.search);
+    const refCode = params.get("ref");
+
+    // ✅ Look up agent by code (secure)
+    if (refCode && AGENT_CODES[refCode.toUpperCase()]) {
+      setAgent(AGENT_CODES[refCode.toUpperCase()]);
+    } else {
+      setAgent(AGENT_CODES.DEFAULT); // Use default if invalid code
+    }
+
     const fetchImages = async () => {
       try {
         setLoading(true);
-        console.log("Fetching from:", `${baseURL}/api/images`);
-        
         const response = await fetch(`${baseURL}/api/images`);
-        
-        console.log("Response status:", response.status);
-        console.log("Response headers:", response.headers.get("content-type"));
-        
         const text = await response.text();
-        console.log("Raw response:", text.substring(0, 200));
-        
-        let data;
-        try {
-          data = JSON.parse(text);
-        } catch (parseError) {
-          console.error("JSON parse error:", parseError);
-          throw new Error("Server returned invalid JSON. Check console for raw response.");
-        }
+        const data = JSON.parse(text);
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -56,7 +63,7 @@ export default function App() {
   if (loading) {
     return (
       <div style={{ textAlign: "center", padding: "50px" }}>
-        <h2>Loading images...</h2>
+        <h2>Loading data...</h2>
       </div>
     );
   }
@@ -66,7 +73,6 @@ export default function App() {
       <div style={{ textAlign: "center", padding: "50px", color: "red" }}>
         <h2>Error: {error}</h2>
         <p>API URL: {baseURL}/api/images</p>
-        <p>Check browser console for more details</p>
       </div>
     );
   }
@@ -82,9 +88,14 @@ export default function App() {
         alignItems: "center",
       }}
     >
-      <h2 style={{ marginBottom: "20px", color: "#333" }}>
-        👗 ZELLBURY Clothing Catalog
-      </h2>
+      <div style={{ textAlign: "center", marginBottom: "20px" }}>
+        <h2 style={{ color: "#333", marginBottom: "5px" }}>
+          👗 ZELLBURY Clothing Catalog
+        </h2>
+        <p style={{ color: "#666", fontSize: "14px" }}>
+          {/* Your Agent: {agent.name} */}
+        </p>
+      </div>
 
       {images.length === 0 ? (
         <p>No images found</p>
@@ -123,9 +134,8 @@ export default function App() {
                   Image #{index + 1}
                 </span>
 
-                {/* ✅ WhatsApp button container with strip + icon */}
-             <a   
-                  href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+            <a    
+                  href={`https://wa.me/${agent.number}?text=${encodeURIComponent(
                     `👋 Hi! I'm interested in image #${index + 1} from your Zellbury catalog.\n\n📸 Image link:\n${img}`
                   )}`}
                   target="_blank"
@@ -139,7 +149,6 @@ export default function App() {
                     position: "relative",
                   }}
                 >
-                  {/* Order Now Strip */}
                   <div
                     className="order-strip"
                     style={{
@@ -156,7 +165,6 @@ export default function App() {
                     Order Now
                   </div>
 
-                  {/* WhatsApp Icon */}
                   <div
                     className="whatsapp-icon-wrapper"
                     style={{
@@ -180,8 +188,7 @@ export default function App() {
           ))}
         </div>
       )}
-
-      {/* ✅ CSS for responsive grid + WhatsApp animation */}
+<Footer/>
       <style>
         {`
           .image-grid {
@@ -204,7 +211,6 @@ export default function App() {
             }
           }
 
-          /* ✅ WhatsApp Container Hover Effect */
           .whatsapp-container:hover .order-strip {
             background-color: #188A42;
             box-shadow: 0 5px 15px rgba(37, 211, 102, 0.5);
@@ -227,7 +233,6 @@ export default function App() {
             transition: all 0.3s ease;
           }
 
-          /* ✅ Icon Bounce Animation on Hover */
           @keyframes bounce {
             0%, 100% {
               transform: translateY(0);
@@ -241,7 +246,6 @@ export default function App() {
             animation: bounce 0.6s ease infinite;
           }
 
-          /* ✅ Pulse Animation */
           @keyframes pulse {
             0% {
               box-shadow: 0 3px 10px rgba(37, 211, 102, 0.3);
