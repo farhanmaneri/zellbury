@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { FaWhatsapp } from "react-icons/fa";
+import { FaWhatsapp, FaCheckCircle } from "react-icons/fa";
 import Footer from "./Footer";
 
-// ✅ Secure agent mapping
+// ✅ Secure agent mapping with sold items tracking
 const AGENT_CODES = {
-  SD2024: { name: "saeed", number: "923159088751" },
-  AD2024: { name: "arshid", number: "923319382831" },
-  KD2024: { name: "khadija", number: "923320926641" },
-  SH2024: { name: "shaheen", number: "923168802164" },
-  DEFAULT: { name: "Sales Team", number: "923133134555" },
+  SD2024: { name: "saeed", number: "923159088751", soldItems: [3] },
+  AD2024: { name: "arshid", number: "923319382831", soldItems: [5] },
+  KD2024: { name: "khadija", number: "923320926641", soldItems: [5] },
+  SH2024: { name: "shaheen", number: "923168802164", soldItems: [5] },
+  DEFAULT: { name: "Sales Team", number: "923133134555", soldItems: [] },
 };
 
 export default function App() {
@@ -20,15 +20,13 @@ export default function App() {
   const baseURL = import.meta.env.VITE_API_DEV;
 
   useEffect(() => {
-    // ✅ Get agent code from URL
     const params = new URLSearchParams(window.location.search);
     const refCode = params.get("ref");
 
-    // ✅ Look up agent by code (secure)
     if (refCode && AGENT_CODES[refCode.toUpperCase()]) {
       setAgent(AGENT_CODES[refCode.toUpperCase()]);
     } else {
-      setAgent(AGENT_CODES.DEFAULT); // Use default if invalid code
+      setAgent(AGENT_CODES.DEFAULT);
     }
 
     const fetchImages = async () => {
@@ -63,7 +61,7 @@ export default function App() {
   if (loading) {
     return (
       <div style={{ textAlign: "center", padding: "50px" }}>
-        <h2>Loading data...</h2>
+        <h2>Loading images...</h2>
       </div>
     );
   }
@@ -82,113 +80,188 @@ export default function App() {
       style={{
         backgroundColor: "#f8f9fa",
         minHeight: "100vh",
-        padding: "20px",
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
       }}
     >
-      <div style={{ textAlign: "center", marginBottom: "20px" }}>
-        <h2 style={{ color: "#333", marginBottom: "5px" }}>
-          👗 ZELLBURY Clothing Catalog
-        </h2>
-        <p style={{ color: "#666", fontSize: "14px" }}>
-          {/* Your Agent: {agent.name} */}
-        </p>
-      </div>
+      {/* Main Content */}
+      <div
+        style={{
+          flex: 1,
+          padding: "20px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <div style={{ textAlign: "center", marginBottom: "20px" }}>
+          <h2 style={{ color: "#333", marginBottom: "5px" }}>
+            👗 ZELLBURY Clothing Catalog
+          </h2>
+          <p style={{ color: "#666", fontSize: "14px" }}>
+            {/* Your Agent: {agent.name} */}
+          </p>
+          {agent.soldItems.length > 0 && (
+            <p style={{ color: "#27ae60", fontSize: "13px", fontWeight: "600" }}>
+              🎉 {agent.soldItems.length} items sold!
+            </p>
+          )}
+        </div>
 
-      {images.length === 0 ? (
-        <p>No images found</p>
-      ) : (
-        <div className="image-grid">
-          {images.map((img, index) => (
-            <div
-              key={index}
-              style={{
-                backgroundColor: "white",
-                borderRadius: "12px",
-                boxShadow: "0 3px 8px rgba(0,0,0,0.1)",
-                overflow: "hidden",
-                position: "relative",
-              }}
-            >
-              <img
-                src={img}
-                alt={`Cloth ${index + 1}`}
-                style={{
-                  width: "100%",
-                  height: "auto",
-                  display: "block",
-                  objectFit: "cover",
-                }}
-              />
-              <div
-                style={{
-                  padding: "15px",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <span style={{ fontWeight: "600", color: "#333", fontSize: "14px" }}>
-                  Image #{index + 1}
-                </span>
+        {images.length === 0 ? (
+          <p>No images found</p>
+        ) : (
+          <div className="image-grid">
+            {images.map((img, index) => {
+              const imageNumber = index + 1;
+              const isSold = agent.soldItems.includes(imageNumber);
 
-            <a    
-                  href={`https://wa.me/${agent.number}?text=${encodeURIComponent(
-                    `👋 Hi! I'm interested in image #${index + 1} from your Zellbury catalog.\n\n📸 Image link:\n${img}`
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="whatsapp-container"
+              return (
+                <div
+                  key={index}
                   style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0",
-                    textDecoration: "none",
+                    backgroundColor: "white",
+                    borderRadius: "12px",
+                    boxShadow: "0 3px 8px rgba(0,0,0,0.1)",
+                    overflow: "hidden",
                     position: "relative",
+                    opacity: isSold ? 0.7 : 1,
                   }}
                 >
-                  <div
-                    className="order-strip"
-                    style={{
-                      backgroundColor: "#1DA851",
-                      color: "white",
-                      padding: "8px 12px",
-                      borderRadius: "20px 0 0 20px",
-                      fontSize: "13px",
-                      fontWeight: "600",
-                      whiteSpace: "nowrap",
-                      boxShadow: "0 3px 10px rgba(37, 211, 102, 0.3)",
-                    }}
-                  >
-                    Order Now
-                  </div>
+                  {/* ✅ Sold Out Badge */}
+                  {isSold && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "10px",
+                        left: "10px",
+                        backgroundColor: "#e74c3c",
+                        color: "white",
+                        padding: "5px 12px",
+                        borderRadius: "20px",
+                        fontSize: "12px",
+                        fontWeight: "700",
+                        zIndex: 10,
+                        boxShadow: "0 2px 8px rgba(231, 76, 60, 0.4)",
+                      }}
+                    >
+                      ✓ SOLD OUT
+                    </div>
+                  )}
 
-                  <div
-                    className="whatsapp-icon-wrapper"
+                  <img
+                    src={img}
+                    alt={`Cloth ${imageNumber}`}
                     style={{
-                      backgroundColor: "#25D366",
-                      color: "white",
-                      borderRadius: "0 50% 50% 0",
-                      width: "45px",
-                      height: "45px",
+                      width: "100%",
+                      height: "auto",
+                      display: "block",
+                      objectFit: "cover",
+                      filter: isSold ? "grayscale(50%)" : "none",
+                    }}
+                  />
+                  <div
+                    style={{
+                      padding: "15px",
                       display: "flex",
+                      justifyContent: "space-between",
                       alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: "22px",
-                      boxShadow: "0 3px 10px rgba(37, 211, 102, 0.4)",
                     }}
                   >
-                    <FaWhatsapp className="whatsapp-icon" />
+                    <span style={{ fontWeight: "600", color: "#333", fontSize: "14px" }}>
+                      Image #{imageNumber}
+                    </span>
+
+                    {/* ✅ Conditional Button: Order Now OR Sold Out */}
+                    {isSold ? (
+                      // Sold Out Button
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0",
+                          backgroundColor: "#95a5a6",
+                          borderRadius: "25px",
+                          padding: "8px 16px",
+                          cursor: "not-allowed",
+                        }}
+                      >
+                        <div
+                          style={{
+                            color: "white",
+                            fontSize: "13px",
+                            fontWeight: "600",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "6px",
+                          }}
+                        >
+                          <FaCheckCircle style={{ fontSize: "16px" }} />
+                          <span>Sold Out</span>
+                        </div>
+                      </div>
+                    ) : (
+                      // Order Now Button
+                     <a 
+                        href={`https://wa.me/${agent.number}?text=${encodeURIComponent(
+                          `👋 Hi ${agent.name}! I'm interested in image #${imageNumber} from your Zellbury catalog.\n\n📸 Image link:\n${img}`
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="whatsapp-container"
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0",
+                          textDecoration: "none",
+                          position: "relative",
+                        }}
+                      >
+                        <div
+                          className="order-strip"
+                          style={{
+                            backgroundColor: "#1DA851",
+                            color: "white",
+                            padding: "8px 12px",
+                            borderRadius: "20px 0 0 20px",
+                            fontSize: "13px",
+                            fontWeight: "600",
+                            whiteSpace: "nowrap",
+                            boxShadow: "0 3px 10px rgba(37, 211, 102, 0.3)",
+                          }}
+                        >
+                          Order Now
+                        </div>
+
+                        <div
+                          className="whatsapp-icon-wrapper"
+                          style={{
+                            backgroundColor: "#25D366",
+                            color: "white",
+                            borderRadius: "0 50% 50% 0",
+                            width: "45px",
+                            height: "45px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontSize: "22px",
+                            boxShadow: "0 3px 10px rgba(37, 211, 102, 0.4)",
+                          }}
+                        >
+                          <FaWhatsapp className="whatsapp-icon" />
+                        </div>
+                      </a>
+                    )}
                   </div>
-                </a>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-<Footer/>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      <Footer />
+
       <style>
         {`
           .image-grid {
@@ -208,7 +281,6 @@ export default function App() {
           @media (max-width: 500px) {
             .image-grid {
               grid-template-columns: repeat(1, 1fr);
-            }
           }
 
           .whatsapp-container:hover .order-strip {
