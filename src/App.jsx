@@ -6,7 +6,7 @@ import Footer from "./Footer";
 const AGENT_CODES = {
   SD2024: { name: "saeed", number: "923159088751", soldItems: [3] },
   AD2024: { name: "arshid", number: "923319382831", soldItems: [5] },
-  KD2024: { name: "khadija", number: "923320926641", soldItems: [2,13,15,19,30,33,37,38,44,46] },
+  KD2024: { name: "khadija", number: "923320926641", soldItems: [2,3,5,13,15,19,30,33,,34,37,38,44,46] },
   SH2024: { name: "shaheen", number: "923168802164", soldItems: [5] },
   DEFAULT: { name: "Sales Team", number: "923133134555", soldItems: [] },
 };
