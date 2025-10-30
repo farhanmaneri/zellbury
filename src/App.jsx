@@ -6,9 +6,44 @@ import Footer from "./Footer";
 const AGENT_CODES = {
   SD2024: { name: "saeed", number: "923159088751", soldItems: [3] },
   AD2024: { name: "arshid", number: "923319382831", soldItems: [5] },
-  KD2024: { name: "khadija", number: "923320926641", soldItems:  },
+  KD2024: {
+    name: "khadija",
+    number: "923320926641",
+    soldItems: [
+      2, 3, 5, 6, 7, 10, 13, 15, 19, 21, 26, 30, 31, 33,
+
+      34, 36, 37, 38, 41, 44, 46,
+    ],
+  },
   SH2024: { name: "shaheen", number: "923168802164", soldItems: [5] },
-  DEFAULT: { name: "Sales Team", number: "923133134555", soldItems: [2,3,5,6,7,10,13,15,19,21,26,30,31,33,,34,36,37,38,41,44,46] },
+  DEFAULT: {
+    name: "Sales Team",
+    number: "923133134555",
+    soldItems: [
+      2,
+      3,
+      5,
+      6,
+      7,
+      10,
+      13,
+      15,
+      19,
+      21,
+      26,
+      30,
+      31,
+      33,
+      
+      34,
+      36,
+      37,
+      38,
+      41,
+      44,
+      46,
+    ],
+  },
 };
 
 export default function App() {
@@ -35,11 +70,11 @@ export default function App() {
         const response = await fetch(`${baseURL}/api/images`);
         const text = await response.text();
         const data = JSON.parse(text);
-        
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         setImages(data);
         setError(null);
       } catch (err) {
@@ -102,7 +137,9 @@ export default function App() {
             {/* Your Agent: {agent.name} */}
           </p>
           {agent.soldItems.length > 0 && (
-            <p style={{ color: "#27ae60", fontSize: "13px", fontWeight: "600" }}>
+            <p
+              style={{ color: "#27ae60", fontSize: "13px", fontWeight: "600" }}
+            >
               🎉 {agent.soldItems.length} items sold!
             </p>
           )}
@@ -168,7 +205,13 @@ export default function App() {
                       alignItems: "center",
                     }}
                   >
-                    <span style={{ fontWeight: "600", color: "#333", fontSize: "14px" }}>
+                    <span
+                      style={{
+                        fontWeight: "600",
+                        color: "#333",
+                        fontSize: "14px",
+                      }}
+                    >
                       Image #{imageNumber}
                     </span>
 
@@ -202,8 +245,10 @@ export default function App() {
                       </div>
                     ) : (
                       // Order Now Button
-                     <a 
-                        href={`https://wa.me/${agent.number}?text=${encodeURIComponent(
+                      <a
+                        href={`https://wa.me/${
+                          agent.number
+                        }?text=${encodeURIComponent(
                           `👋 Hi ${agent.name}! I'm interested in image #${imageNumber} from your Zellbury catalog.\n\n📸 Image link:\n${img}`
                         )}`}
                         target="_blank"
