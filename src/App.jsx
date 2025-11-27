@@ -3,31 +3,34 @@ import { FaWhatsapp, FaCheckCircle } from "react-icons/fa";
 import Footer from "./Footer";
 
 // ✅ Secure agent mapping with sold items tracking
+const KHADIJA_SOLD_ITEMS = [
+  37, 40, 44, 45, 55, 61, 62, 63, 64, 65, 69, 70, 72, 74, 75, 76, 77, 78, 79,
+  80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98,
+  99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114,
+  115, 116, 117, 118, 119, 120, 121,
+];
+
+
 const AGENT_CODES = {
   SD2024: { name: "saeed", number: "923159088751", soldItems: [3] },
+
   AD2024: { name: "arshid", number: "923319382831", soldItems: [5] },
+
   KD2024: {
     name: "khadija",
     number: "923320926641",
-    soldItems: [
-      17, 20, 24, 25, 35, 41, 42, 43, 44, 45, 49, 50, 52, 54, 55, 56, 57, 58,
-      59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76,
-      77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94,
-      95, 96, 97, 98, 99, 100, 101,
-    ],
+    soldItems: KHADIJA_SOLD_ITEMS,
   },
+
   SH2024: { name: "shaheen", number: "923168802164", soldItems: [5] },
+
   DEFAULT: {
     name: "Sales Team",
     number: "923133134555",
-    soldItems: [
-      17, 20, 24, 25, 35, 41, 42, 43, 44, 45, 49, 50, 52, 54, 55, 56, 57, 58,
-      59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76,
-      77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94,
-      95, 96, 97, 98, 99, 100, 101,
-    ],
+    soldItems: KHADIJA_SOLD_ITEMS, // ✅ same list, no error
   },
 };
+
 
 export default function App() {
   const [images, setImages] = useState([]);
