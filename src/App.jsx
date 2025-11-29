@@ -4,7 +4,7 @@ import Footer from "./Footer";
 
 // ✅ Secure agent mapping with sold items tracking
 const KHADIJA_SOLD_ITEMS = [
-  37, 40, 44, 45, 55, 61, 62, 63, 64, 65, 69, 70, 72, 74, 75, 76, 77, 78, 79,
+ 5, 6 ,7 ,8, 11,12,13  ,14 ,17,18,19,20,21,22, 23, 25,27, 29, 31, 33, 34, 36, 37, 40, 44, 45,49,53, 55,57, 60,66, 61,  63, 64, 65,  72, 74, 75, 76, 77, 78, 79,
   80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98,
   99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114,
   115, 116, 117, 118, 119, 120, 121,
@@ -22,7 +22,7 @@ const AGENT_CODES = {
     soldItems: KHADIJA_SOLD_ITEMS,
   },
 
-  SH2024: { name: "shaheen", number: "923168802164", soldItems: [5] },
+  AF2024: { name: "aftab", number: "923359700784", soldItems: KHADIJA_SOLD_ITEMS },
 
   DEFAULT: {
     name: "Sales Team",
