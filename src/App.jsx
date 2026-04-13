@@ -3,9 +3,7 @@ import { FaWhatsapp, FaCheckCircle } from "react-icons/fa";
 import Footer from "./Footer";
 
 // ✅ Secure agent mapping with sold items tracking
-const KHADIJA_SOLD_ITEMS = [
-
-];
+const KHADIJA_SOLD_ITEMS = [];
 
 
 
@@ -18,19 +16,14 @@ const AGENT_CODES = {
   KD2024: {
     name: "khadija",
     number: "923320926641",
-    soldItems: [
-  
-    ],
+    soldItems: KHADIJA_SOLD_ITEMS,
   },
 
-  AF2024: { name: "aftab", number: "923359700784", soldItems: KHADIJA_SOLD_ITEMS },
 
   DEFAULT: {
     name: "Sales Team",
     number: "923133134555",
-    soldItems: [
-    
-    ],
+    soldItems: KHADIJA_SOLD_ITEMS,
   },
 };
 
