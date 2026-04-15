@@ -8,14 +8,14 @@ dotenv.config();
 const app = express();
 app.use(cors());
 
-// Cloudinary config
+// ✅ Cloudinary config
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// API route
+// ✅ API route
 app.get("/api/images", async (req, res) => {
   try {
     let allImages = [];
@@ -27,7 +27,7 @@ app.get("/api/images", async (req, res) => {
         .sort_by("public_id", "asc")
         .max_results(100);
 
-      // ✅ ONLY add next_cursor if it exists
+      // ✅ Add cursor only when it exists
       if (nextCursor) {
         query = query.next_cursor(nextCursor);
       }
@@ -40,7 +40,11 @@ app.get("/api/images", async (req, res) => {
       nextCursor = result.next_cursor;
     } while (nextCursor);
 
-    console.log("TOTAL IMAGES:", allImages.length); // 👈 ADD THIS
+    // ✅ Debug log
+    console.log("TOTAL IMAGES:", allImages.length);
+
+    // ✅ Prevent caching issue (important for Vercel)
+    res.setHeader("Cache-Control", "no-store");
 
     res.json(allImages);
   } catch (error) {
@@ -48,11 +52,13 @@ app.get("/api/images", async (req, res) => {
     res.status(500).json({ message: "Failed to fetch images" });
   }
 });
-console.log("TOTAL IMAGES:", allImages.length);
-// ✅ Local dev mode (run manually)
+
+// ✅ Local dev mode
 if (!process.env.VERCEL) {
   const PORT = process.env.PORT || 5000;
-  app.listen(PORT, () => console.log(`✅ Local server running on port ${PORT}`));
+  app.listen(PORT, () =>
+    console.log(`✅ Local server running on port ${PORT}`)
+  );
 }
 
 // ✅ Export for Vercel
