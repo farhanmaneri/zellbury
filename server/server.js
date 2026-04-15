@@ -18,20 +18,37 @@ cloudinary.config({
 // API route
 app.get("/api/images", async (req, res) => {
   try {
-    const { resources } = await cloudinary.search
-      .expression("folder:zellbury")
-      .sort_by("public_id", "asc")
-      .max_results(100)
-      .execute();
+    let allImages = [];
+    let nextCursor = undefined;
 
-    const imageUrls = resources.map((file) => file.secure_url);
-    res.json(imageUrls);
+    do {
+      let query = cloudinary.search
+        .expression("folder:zellbury")
+        .sort_by("public_id", "asc")
+        .max_results(100);
+
+      // ✅ ONLY add next_cursor if it exists
+      if (nextCursor) {
+        query = query.next_cursor(nextCursor);
+      }
+
+      const result = await query.execute();
+
+      const urls = result.resources.map((file) => file.secure_url);
+      allImages = [...allImages, ...urls];
+
+      nextCursor = result.next_cursor;
+    } while (nextCursor);
+
+    console.log("TOTAL IMAGES:", allImages.length); // 👈 ADD THIS
+
+    res.json(allImages);
   } catch (error) {
     console.error("Cloudinary Error:", error);
     res.status(500).json({ message: "Failed to fetch images" });
   }
 });
-
+console.log("TOTAL IMAGES:", allImages.length);
 // ✅ Local dev mode (run manually)
 if (!process.env.VERCEL) {
   const PORT = process.env.PORT || 5000;
