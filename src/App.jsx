@@ -3,7 +3,7 @@ import { FaWhatsapp, FaCheckCircle } from "react-icons/fa";
 import Footer from "./Footer";
 
 // ✅ Secure agent mapping with sold items tracking
-const KHADIJA_SOLD_ITEMS = [];
+const KHADIJA_SOLD_ITEMS = [151,169];
 
 
 
