@@ -24,7 +24,7 @@ app.get("/api/images", async (req, res) => {
     do {
       let query = cloudinary.search
         .expression("folder:zellbury")
-        .sort_by("public_id", "desc")
+  .sort_by("uploaded_at", "desc")  // ← use uploaded_at
         .max_results(100);
 
       // ✅ Add cursor only when it exists

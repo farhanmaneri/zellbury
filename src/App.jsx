@@ -46,26 +46,35 @@ export default function App() {
       setAgent(AGENT_CODES.DEFAULT);
     }
 
-    const fetchImages = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch(`${baseURL}/api/images`);
-        const text = await response.text();
-        const data = JSON.parse(text);
+   const fetchImages = async () => {
+  try {
+    setLoading(true);
+    const response = await fetch(`${baseURL}/api/images`);
+    const text = await response.text();
+    const data = JSON.parse(text);
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
 
-        setImages(data);
-        setError(null);
-      } catch (err) {
-        console.error("Error fetching images:", err);
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+    // ✅ Sort by page number from filename
+    const sorted = data.sort((a, b) => {
+      const getPage = (url) => {
+        const match = url.match(/_p(\d+)_/);
+        return match ? parseInt(match[1]) : 0;
+      };
+      return getPage(b) - getPage(a); // desc: highest page first
+    });
+
+    setImages(sorted); // ← use sorted instead of data
+    setError(null);
+  } catch (err) {
+    console.error("Error fetching images:", err);
+    setError(err.message);
+  } finally {
+    setLoading(false);
+  }
+};
 
     if (baseURL) {
       fetchImages();
