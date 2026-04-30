@@ -24,16 +24,16 @@ app.get("/api/images", async (req, res) => {
     do {
       let query = cloudinary.search
         .expression("folder:zellbury")
-        .sort_by("public_id", "asc")
+        .sort_by("public_id", "desc")
         .max_results(100);
 
       // ✅ Add cursor only when it exists
       if (nextCursor) {
         query = query.next_cursor(nextCursor);
       }
-
       const result = await query.execute();
-
+      console.log(result.resources.map(f => f.public_id));
+      
       const urls = result.resources.map((file) => file.secure_url);
       allImages = [...allImages, ...urls];
 
