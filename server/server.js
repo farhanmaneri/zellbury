@@ -15,6 +15,39 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+
+app.get("/api/rename", async (req, res) => {
+  try {
+    let allResources = [];
+    let nextCursor = undefined;
+
+    do {
+      let query = cloudinary.search
+        .expression("folder:zellbury")
+        .sort_by("public_id", "asc")
+        .max_results(100);
+
+      if (nextCursor) query = query.next_cursor(nextCursor);
+
+      const result = await query.execute();
+      allResources = [...allResources, ...result.resources];
+      nextCursor = result.next_cursor;
+    } while (nextCursor);
+
+    // Rename each image to 1, 2, 3...
+    for (let i = 0; i < allResources.length; i++) {
+      const oldId = allResources[i].public_id;
+      const newId = `zellbury/${i + 1}`;
+      await cloudinary.uploader.rename(oldId, newId);
+      console.log(`✅ Renamed ${oldId} → ${newId}`);
+    }
+
+    res.json({ message: `✅ Renamed ${allResources.length} images!` });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: error.message });
+  }
+});
 // ✅ API route
 app.get("/api/images", async (req, res) => {
   try {
